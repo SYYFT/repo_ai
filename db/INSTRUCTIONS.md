@@ -40,6 +40,13 @@ Stores final, aggregated, and analyzed data that powers insights and visualizati
   - `query_logs` – Stores logs of queries processed by the LLM, for analytics and improving LLM responses.
 
 ---
+### DDL and DML Folders
+
+- **DDL (Data Definition Language)**: The `ddl/` folder contains SQL scripts for creating, altering, and deleting database structures, including schemas, tables, and indexes. These scripts are used to define and manage the database architecture. Key operations include `CREATE`, `ALTER`, and `DROP` commands, which establish the overall structure of the database across DEV, TEST, and PROD environments.
+
+- **DML (Data Manipulation Language)**: The `dml/` folder holds SQL scripts for manipulating data within the database. These scripts include commands for inserting, updating, deleting, and querying data in existing tables. Common DML operations include `INSERT`, `UPDATE`, `DELETE`, and `SELECT`, enabling data modification and retrieval for testing, validation, and analytics.
+
+---
 
 ## Example Database Structure
 
