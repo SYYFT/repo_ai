@@ -26,7 +26,87 @@ The backend uses DuckDB to store metadata about the repository:
 - **Functions Table**: Stores function definitions and their associated files.
 - **Imports Table**: Tracks import relationships between files.
 
+
+
 ---
+
+## High-Level Architecture
+
+### Components
+
+1. **Backend**  
+   - **Data Processing**: Python script to parse the repository, extract metadata (functions, imports, dependencies), and load it into a DuckDB database.
+   - **Data Storage**: DuckDB stores information about files, functions, and imports, enabling efficient querying.
+   - **API**: Serves data to the frontend for visualizations and processes LLM-based queries.
+
+2. **Frontend**
+   - **UI for Visualization**: Built with JavaScript libraries (e.g., D3.js or Cytoscape.js) to display file and function dependencies using arrow connections.
+   - **Infinity Scrolling**: Dynamically loads file information as the user scrolls, minimizing load times and improving user experience.
+   - **Query Interface**: Allows users to ask questions about the repository (e.g., function call counts), receiving answers from the backend.
+
+3. **LLM Integration**
+   - **Question Answering**: A language model (LLM) to interpret and respond to user queries about repository insights.
+   - **Query Processing**: LLM translates questions into SQL or Polars queries for DuckDB and returns responses.
+
+---
+
+## Folder Structure
+
+repo-insights-app/
+├── db/                     # Database folder (DuckDB database files)
+│   └── repository_data.db   # DuckDB database for repository insights
+├── src/
+│   ├── backend/             # Backend code and API
+│   │   ├── parse_repo.py    # Script to parse repository and populate DuckDB
+│   │   ├── query_api.py     # API for frontend data requests and LLM queries
+│   │   └── utils/           # Utility functions for data processing
+│   ├── frontend/            # Frontend code
+│   │   ├── index.html       # HTML entry point
+│   │   ├── app.js           # JavaScript for visualization and infinity scroll
+│   │   └── styles.css       # Styling for the frontend
+├── ARCHITECTURE.md          # This architecture document
+├── README.md                # Project overview and setup
+└── requirements.txt         # Python dependencies
+
+
+## Data Flow
+
+### Repository Parsing
+
+- **Input**: A local folder path or GitHub link.
+- **Process**: `parse_repo.py` uses Python’s `ast` module to parse code, extract function definitions, imports, and dependencies.
+- **Storage**: Metadata is stored in `db/repository_data.db` in DuckDB.
+
+### Data Visualization
+
+- The frontend retrieves data from the backend API (`query_api.py`) and displays file and function relationships.
+- Dependencies between files and function calls are visualized with arrows, allowing users to see how files interact.
+
+### LLM Query Handling
+
+- **User Query**: A user inputs a question in natural language.
+- **Processing**: The LLM processes the question, forms an SQL or Polars query, and retrieves data from DuckDB.
+- **Response**: The LLM returns a response to the frontend, displayed in the query interface.
+
+---
+
+## Future Enhancements
+
+- **Polars Integration**: Migrate to Polars for high-performance data processing.
+- **Expanded Query Capabilities**: Add advanced querying options for repository insights.
+- **Custom Visualizations**: Provide additional visual insights into code structure and usage.
+
+---
+
+## Dependencies
+
+- **DuckDB**: Lightweight database for analytical queries.
+- **Python**: Backend data processing and API.
+- **JavaScript (D3.js or Cytoscape.js)**: Visualization library for the frontend.
+- **Polars**: *(Future)* For optimized data manipulation and analysis.
+
+---
+
 
 ## Getting Started
 
