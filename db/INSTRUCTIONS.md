@@ -48,6 +48,58 @@ Stores final, aggregated, and analyzed data that powers insights and visualizati
 
 ---
 
+### Branch Usage Guidelines
+
+For effective collaboration and organized development, each branch is used based on the type of task being performed. Follow these guidelines to select the correct branch and naming convention:
+
+1. **Data Architecture Branches**
+   - **Usage**: For tasks related to database structure, stored procedures, automation, or any direct manipulation of the database.
+   - **Branch Prefix**: `data-architecture-<layer>`
+   - **Naming Convention**: Include the task name and your username to track work effectively. Follow the format:
+     ```
+     data-architecture-<layer>-/<ticket-number>-<task-name>-<username>
+     ```
+   - **Example**:
+     ```
+     data-architecture-test-/01-creating-ddl-scripts-deeahnuh
+     ```
+
+2. **Data Engineering Branches**
+   - **Usage**: For tasks related to code that interacts with data sources, ingestion processes, or ETL pipelines.
+   - **Branch Prefix**: `data-engineering-<layer>`
+   - **Naming Convention**: Follow the same format to maintain consistency:
+     ```
+     data-engineering-<layer>-/<ticket-number>-<task-name>-<username>
+     ```
+   - **Example**:
+     ```
+     data-engineering-dev-/02-setup-aws-ingestion-deeahnuh
+     ```
+
+3. **Data Analytics Branches**
+   - **Usage**: For tasks focused on data analysis, building visualizations, and generating insights from data.
+   - **Branch Prefix**: `data-analytics-<layer>`
+   - **Naming Convention**: Consistent with other branches, to clearly identify task type, ticket, and user:
+     ```
+     data-analytics-<layer>-/<ticket-number>-<task-name>-<username>
+     ```
+   - **Example**:
+     ```
+     data-analytics-prod-/03-create-visualizations-deeahnuh
+     ```
+
+### Summary
+
+- **Layer Types**:
+  - `dev`: For initial development and testing in a non-production environment.
+  - `test`: For quality assurance and final checks before deployment.
+  - `prod`: For production-ready changes that are fully tested.
+
+- **Naming Convention**: `<branch-prefix>-<layer>-/<ticket-number>-<task-name>-<username>`
+
+
+
+---
 ## Example Database Structure
 
 | Environment | Schema      | Table                    | Description                                                 |
