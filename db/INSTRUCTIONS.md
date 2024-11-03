@@ -97,7 +97,37 @@ For effective collaboration and organized development, each branch is used based
 
 - **Naming Convention**: `<branch-prefix>-<layer>-/<ticket-number>-<task-name>-<username>`
 
+---
 
+### DuckDB Database Structure and Schema Management
+
+DuckDB operates slightly differently from other databases, such as PostgreSQL or MySQL. In DuckDB:
+
+- **Single Database File**: Each `.db` file is treated as a standalone database. This means that instead of having multiple databases (e.g., `DEV`, `TEST`, `PROD`), DuckDB uses separate files for each environment.
+  - Example: For a development environment, the database file might be `repo_ai_dev.db`, while the test environment could use `repo_ai_test.db`.
+
+- **Schemas as Logical Namespaces**: Within each database file, **schemas** act as logical namespaces. This allows you to organize tables and other database objects logically without creating separate databases within the same file.
+  - Schemas like `ingestion`, `processing`, `analytics`, and `sandbox` can be used across different files for consistent structure.
+
+- **No `USE DATABASE` Command**: Since each `.db` file is self-contained, DuckDB doesn’t support a `USE DATABASE` command. Instead, you specify which database file to connect to by providing the file path when connecting.
+
+### How to Check Schemas in DuckDB
+
+To view all schemas within a DuckDB database file:
+
+1. **Connect to the Database**:
+   - Open the database file by specifying its path. In DuckDB’s shell, for example:
+     ```sql
+     .open /path/to/repo_ai_dev.db
+     ```
+
+2. **List Schemas**:
+   - Use the following query to list all schemas within the database file:
+     ```sql
+     SELECT schema_name FROM information_schema.schemata;
+     ```
+
+This approach allows you to maintain separate database files for DEV, TEST, and PROD environments, each containing the same schema structure (e.g., `ingestion`, `processing`, `analytics`, `sandbox`) for consistency across environments.
 
 ---
 ## Example Database Structure
