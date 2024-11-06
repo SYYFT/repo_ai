@@ -1,13 +1,19 @@
 import os
 
-# Define the base directory for the DEV environment
+#---------------------------------- 
+#------ BASE DIRECTORY TO MIMICK --
+#---------------------------------- 
 base_dir = '/workspaces/repo_ai/db/dev'
 
-# Define the folders for ddl and dml, and the schemas within each
+#---------------------------------- 
+#-------- SECTIONS IN REPO --------
+#---------------------------------- 
 sections = ['ddl', 'dml']
 schemas = ['ingestion', 'processing', 'analytics', 'sandbox']
 
-# Create the folder structure
+#---------------------------------- 
+#-------- FOLDER STRUCTURE --------
+#---------------------------------- 
 for section in sections:
     section_dir = os.path.join(base_dir, section)
     os.makedirs(section_dir, exist_ok=True)
