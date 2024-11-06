@@ -1,5 +1,6 @@
 # 📊 Repository Insights App
 
+#### URL: https://chatgpt.com/share/672ab8c4-d4e0-8010-9e77-34f72d1195ef
 ## Overview
 The **Repository Insights App** is designed to help new team members quickly understand the structure and functionality of a codebase. By uploading a repository folder or providing a GitHub link, this app visualizes code dependencies, function calls, and module imports, allowing developers to explore code relationships through an interactive UI. The app also includes an integrated language model that can answer questions about the repository, such as _"How many times is `getAWSCredits` used in this repo?"_
 
