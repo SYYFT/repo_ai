@@ -1,4 +1,4 @@
 # Ignore the virtual environment folder
 repo-ai-v/
 .vscode
-SAMPLE_REPO/
+# SAMPLE_REPO/
