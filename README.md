@@ -52,23 +52,23 @@ The backend uses DuckDB to store metadata about the repository:
 ---
 
 ## Folder Structure
-
->repo-insights-app/
->├── db/                     # Database folder (DuckDB database files)
->│   └── repository_data.db   # DuckDB database for repository insights
->├── src/
->│   ├── backend/             # Backend code and API
->│   │   ├── parse_repo.py    # Script to parse repository and populate DuckDB
->│   │   ├── query_api.py     # API for frontend data requests and LLM queries
->│   │   └── utils/           # Utility functions for data processing
->│   ├── frontend/            # Frontend code
->│   │   ├── index.html       # HTML entry point
->│   │   ├── app.js           # JavaScript for visualization and infinity scroll
->│   │   └── styles.css       # Styling for the frontend
->├── ARCHITECTURE.md          # This architecture document
->├── README.md                # Project overview and setup
->└── requirements.txt         # Python dependencies
-
+```
+repo-insights-app/
+├── db/                     # Database folder (DuckDB database files)
+│   └── repository_data.db   # DuckDB database for repository insights
+├── src/
+│   ├── backend/             # Backend code and API
+│   │   ├── parse_repo.py    # Script to parse repository and populate DuckDB
+│   │   ├── query_api.py     # API for frontend data requests and LLM queries
+│   │   └── utils/           # Utility functions for data processing
+│   ├── frontend/            # Frontend code
+│   │   ├── index.html       # HTML entry point
+│   │   ├── app.js           # JavaScript for visualization and infinity scroll
+│   │   └── styles.css       # Styling for the frontend
+├── ARCHITECTURE.md          # This architecture document
+├── README.md                # Project overview and setup
+└── requirements.txt         # Python dependencies
+```
 
 ## Data Flow
 
