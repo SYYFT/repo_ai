@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Folder, UploadCloud } from "lucide-react";
-import AnalysisDashboard from "./AnalysisDashboard";
+import { Folder, UploadCloud, Github, Laugh } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface FileInfo {
   name: string;
@@ -9,39 +9,45 @@ interface FileInfo {
   file?: File;
 }
 
-export default function FileExplorer() {
-  const [files, setFiles] = useState<FileInfo[]>([]);
-  const [isDragging, setIsDragging] = useState(false);
-  const [showSummary, setShowSummary] = useState(false);
+interface FileExplorerProps {
+  setFiles: (files: FileInfo[]) => void;
+}
 
-  const processFiles = async (fileList: FileList) => {
-    const newFiles: FileInfo[] = [];
-    for (const file of Array.from(fileList)) {
-      newFiles.push({
-        name: file.name,
-        type: file.type || "unknown",
-        size: formatFileSize(file.size),
-        file: file,
-      });
-    }
+export default function FileExplorer({ setFiles }: FileExplorerProps) {
+  const [isDragging, setIsDragging] = useState(false);
+  const [repoLink, setRepoLink] = useState(""); // 📌 Store GitHub/Bitbucket Link
+  const navigate = useNavigate();
+
+  // 📌 Process files & navigate to analysis
+  const processFiles = async (fileList: File[]) => {
+    const newFiles: FileInfo[] = fileList.map(file => ({
+      name: file.name,
+      type: file.type || "unknown",
+      size: formatFileSize(file.size),
+      file: file,
+    }));
+    
     setFiles(newFiles);
-    if (newFiles.length > 0) setShowSummary(true);
+    if (newFiles.length > 0) {
+      navigate("/analysis");
+    }
   };
 
+  // 📌 Handle file selection (input field)
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      processFiles(e.target.files);
+      processFiles(Array.from(e.target.files));
     }
   };
 
+  // 📌 Handle Drag & Drop, supporting folders
   const handleDrop = async (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
-    if (e.dataTransfer.files) {
-      processFiles(e.dataTransfer.files);
-    }
+    processFiles(Array.from(e.dataTransfer.files));
   };
 
+  // 📌 Convert bytes to readable format
   const formatFileSize = (bytes: number): string => {
     if (bytes === 0) return "0 Bytes";
     const k = 1024;
@@ -50,83 +56,85 @@ export default function FileExplorer() {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   };
 
-  return (
-    <div className="min-h-screen bg-black flex flex-col">
-    <header className="pt-12 pb-16 px-4">
-      <h1 
-        className="text-5xl font-bold text-center bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent tracking-tight" 
-        style={{ fontFamily: "'Nova Square', sans-serif" }} // Apply font only here
-      >
-        repo.ai
-      </h1>
-    </header>
-      <div className="flex-1 flex items-start justify-center px-4 pb-8">
-        <div className="w-full max-w-6xl">
-          {!showSummary ? (
-            <>
-              {/* Drag & Drop Box */}
-              <div
-                onDragOver={(e) => {
-                  e.preventDefault();
-                  setIsDragging(true);
-                }}
-                onDragLeave={() => setIsDragging(false)}
-                onDrop={handleDrop}
-                className={`
-                  w-full aspect-[2/1] max-h-[400px] rounded-xl mb-8 transition-all duration-300 backdrop-blur-sm
-                  flex items-center justify-center
-                  ${
-                    isDragging
-                      ? "bg-green-900/30 border-2 border-green-400 shadow-[0_0_30px_rgba(74,222,128,0.3)]"
-                      : "bg-green-900/20 border-2 border-green-500/30 hover:border-green-400/50 hover:shadow-[0_0_20px_rgba(74,222,128,0.2)]"
-                  }
-                `}
-              >
-                <div className="flex flex-col items-center justify-center text-green-400 p-8">
-                  <Folder className="w-20 h-20 mb-6 animate-pulse" />
-                  <p className="text-xl mb-3 font-medium">Drop your folder or files here</p>
-                  <p className="text-green-500/70">Files will be analyzed instantly</p>
-                </div>
-              </div>
+  // 📌 Handle Joke
+  const handleJoke = () => {
+    alert("Why do programmers prefer dark mode? Because light attracts bugs!");
+  };
 
-              {/* File Select */}
-              <div className="flex flex-col items-center">
-                <input
-                  type="file"
-                  multiple
-                  webkitdirectory="true"
-                  directory="true"
-                  onChange={handleFileSelect}
-                  className="hidden"
-                  id="file-upload"
-                />
-                <label
-                  htmlFor="file-upload"
-                  className="cursor-pointer bg-green-700 px-6 py-2 rounded-md text-white font-medium hover:bg-green-600 transition"
-                >
-                  Select Folder or Files
-                </label>
-              </div>
-            </>
-          ) : (
-            <AnalysisDashboard files={files} />
-          )}
+  // 📌 Handle Repo Link Submission
+  const handleRepoSubmit = () => {
+    if (repoLink.trim() !== "") {
+      console.log("Repository Link Submitted:", repoLink);
+      alert("Repository link submitted!"); // Optional confirmation message
+    }
+  };
+
+  return (
+    <div className="h-screen flex items-center justify-center">
+      <div className="grid grid-cols-2 grid-rows-2 gap-4 w-3/4 h-3/4">
+        {/* 📌 Drop Folder or Files (Top Left) */}
+        <div
+          onDragOver={(e) => {
+            e.preventDefault();
+            setIsDragging(true);
+          }}
+          onDragLeave={() => setIsDragging(false)}
+          onDrop={handleDrop}
+          className={`flex flex-col items-center justify-center border-2 border-green-400 rounded-lg p-6 transition-all duration-300 backdrop-blur-sm cursor-pointer ${
+            isDragging ? "bg-green-900/40 shadow-lg" : "bg-green-900/20"
+          }`}
+        >
+          <Folder className="w-16 h-16 text-green-400 mb-3" />
+          <p className="text-lg font-medium text-green-400">Drop Folder or Files Here</p>
+        </div>
+
+        {/* 📌 Select Folder or Files (Top Right) */}
+        <div className="flex flex-col items-center justify-center bg-green-700 rounded-lg p-6 transition-all duration-300">
+          <input
+            type="file"
+            multiple
+            webkitdirectory=""
+            directory=""
+            onChange={handleFileSelect}
+            className="hidden"
+            id="file-upload"
+          />
+          <label
+            htmlFor="file-upload"
+            className="cursor-pointer text-white font-medium px-6 py-3 rounded-lg bg-green-800 hover:bg-green-600 transition"
+          >
+            Select Folder or Files
+          </label>
+        </div>
+
+        {/* 📌 GitHub/Bitbucket Repository Link (Bottom Left) */}
+        <div className="flex flex-col items-center justify-center bg-green-700 rounded-lg p-6 transition-all duration-300">
+          <Github className="w-16 h-16 text-white mb-3" />
+          <p className="text-lg font-medium text-white mb-2">GitHub/Bitbucket Repository Link</p>
+          <input
+            type="text"
+            value={repoLink}
+            onChange={(e) => setRepoLink(e.target.value)}
+            placeholder="Paste your repo link here..."
+            className="w-3/4 p-2 rounded-md bg-gray-900 text-white border border-gray-600 focus:border-green-400 focus:outline-none"
+          />
+          <button
+            onClick={handleRepoSubmit}
+            className="mt-3 px-4 py-2 bg-green-800 text-white rounded-lg hover:bg-green-600 transition"
+          >
+            Submit
+          </button>
+        </div>
+
+        {/* 📌 Tell Me a Joke (Bottom Right) */}
+        <div
+          className="flex flex-col items-center justify-center border-2 border-green-400 rounded-lg p-6 transition-all duration-300 cursor-pointer bg-green-900/20 hover:bg-green-900/40"
+          onClick={handleJoke}
+        >
+          <Laugh className="w-16 h-16 text-green-400 mb-3" />
+          <p className="text-lg font-medium text-green-400">Tell me a joke</p>
         </div>
       </div>
-
-      <footer className="p-4 text-center">
-        <a
-          href="https://syyft.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-block text-green-400 hover:text-green-300 transition-colors duration-300 group"
-        >
-          <span className="relative">
-            syyft.com
-            <div className="h-px w-0 group-hover:w-full absolute bottom-0 left-0 bg-gradient-to-r from-green-400 to-emerald-500 transition-all duration-300" />
-          </span>
-        </a>
-      </footer>
     </div>
   );
 }
