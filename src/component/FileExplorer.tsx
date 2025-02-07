@@ -93,7 +93,8 @@ export default function FileExplorer({ setFiles }: FileExplorerProps) {
           <input
             type="file"
             multiple
-            webkitdirectory=""
+            // @ts-ignore
+            webkitdirectory="" 
             directory=""
             onChange={handleFileSelect}
             className="hidden"
