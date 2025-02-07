@@ -1,5 +1,6 @@
-import React from 'react';
+// import React from 'react';
 import { BarChart3, FileText, FolderTree, Clock, ArrowLeft, ExternalLink, Download, UploadCloud } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface FileInfo {
   name: string;
@@ -14,6 +15,8 @@ interface AnalysisDashboardProps {
 }
 
 export default function AnalysisDashboard({ files, onBack }: AnalysisDashboardProps) {
+  const navigate = useNavigate();
+
   const getFileTypeCount = () => {
     const types: Record<string, number> = {};
     files.forEach(file => {
@@ -60,6 +63,14 @@ export default function AnalysisDashboard({ files, onBack }: AnalysisDashboardPr
           <ArrowLeft className="w-5 h-5 mr-2" />
           Back to Upload
         </button>
+        {/* Clickable repo.ai text for navigation back to WelcomePage */}
+        <h1
+          className="text-5xl font-bold bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent tracking-tight cursor-pointer"
+          style={{ fontFamily: "'Nova Square', sans-serif" }}
+          onClick={() => navigate("/")}
+        >
+          repo.ai
+        </h1>
         <div className="flex flex-col gap-4">
           <div className="flex gap-4">
             <button className="flex items-center px-4 py-2 bg-green-900/30 text-green-400 rounded-lg hover:bg-green-900/50 transition-all border border-green-900">

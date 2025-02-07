@@ -71,6 +71,9 @@ export default function FileExplorer({ setFiles }: FileExplorerProps) {
 
   return (
     <div className="h-screen flex items-center justify-center">
+    <div className="absolute top-6 left-1/2 -translate-x-1/2 cursor-pointer" onClick={() => navigate("/")}>
+    <h1 className="text-7xl font-bold bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent tracking-tight" style={{ fontFamily: "'Nova Square', sans-serif" }}>repo.ai</h1>
+    </div>
       <div className="grid grid-cols-2 grid-rows-2 gap-4 w-3/4 h-3/4">
         {/* 📌 Drop Folder or Files (Top Left) */}
         <div

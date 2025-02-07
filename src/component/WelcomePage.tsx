@@ -1,14 +1,15 @@
 import { useEffect } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import "../fonts/fonts.css";
 
 const WelcomePage = () => {
-  console.log("WelcomePage is rendering!"); // ✅ Debugging Log
+  const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("Navigating to /file-explorer in 3 seconds..."); // ✅ Debugging Log
     setTimeout(() => {
       window.location.href = "/file-explorer";
-    }, 9000);
+    }, 3000);
   }, []);
 
   return (
@@ -20,13 +21,28 @@ const WelcomePage = () => {
       transition={{ duration: 1 }}
     >
       <motion.div
-        className="text-center"
+        className="text-center flex flex-col justify-start items-center h-full pt-32"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1 }}
       >
-        <h1 className="text-6xl font-bold">Repo.ai by SYYFT</h1>
-        <p className="text-xl mt-4">Understand Your Code Instantly.</p>
+        <h1
+          className="text-8xl font-bold bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent tracking-tight cursor-pointer"
+          style={{ fontFamily: "'Nova Square', sans-serif", fontSize: "10rem" }}
+          onClick={() => navigate("/")}
+        >
+          repo.ai
+        </h1>
+        
+        {/* Modified byline with stacked text */}
+        <div 
+          className="flex flex-col items-center cursor-pointer mt-2" 
+          style={{ fontFamily: "'Geist Mono', monospace" }}
+          onClick={() => navigate("/")}
+        >
+          <span className="text-sm text-white-400">by</span>
+          <span className="text-4xl text-white-400">SYYFT</span>
+        </div>
       </motion.div>
     </motion.div>
   );

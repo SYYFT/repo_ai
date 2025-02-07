@@ -18,14 +18,14 @@ function App() {
     <Router>
       <div className="min-h-screen bg-black flex flex-col">
         {/* Header */}
-        <header className="pt-12 pb-16 px-4">
+        {/* <header className="pt-12 pb-16 px-4">
           <h1 
             className="text-5xl font-bold text-center bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent tracking-tight" 
             style={{ fontFamily: "'Nova Square', sans-serif" }}
           >
             repo.ai
           </h1>
-        </header>
+        </header> */}
 
         {/* Routes */}
         <main className="flex-1 flex items-start justify-center px-4 pb-8">
