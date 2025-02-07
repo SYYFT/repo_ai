@@ -2,6 +2,7 @@ import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import FileExplorer from "./component/FileExplorer";
 import AnalysisDashboard from "./component/AnalysisDashboard";
+import WelcomePage from "./component/WelcomePage";
 
 interface FileInfo {
   name: string;
@@ -26,11 +27,17 @@ function App() {
           </h1>
         </header>
 
-        {/* Routes for File Upload and Analysis */}
+        {/* Routes */}
         <main className="flex-1 flex items-start justify-center px-4 pb-8">
           <div className="w-full max-w-6xl">
             <Routes>
-              <Route path="/" element={<FileExplorer setFiles={setFiles} />} />
+              {/* Welcome Page Route */}
+              <Route path="/" element={<WelcomePage />} />
+
+              {/* File Explorer Route */}
+              <Route path="/file-explorer" element={<FileExplorer setFiles={setFiles} />} />
+
+              {/* Analysis Dashboard Route */}
               <Route path="/analysis" element={<AnalysisDashboard files={files} onBack={() => window.history.back()} />} />
             </Routes>
           </div>

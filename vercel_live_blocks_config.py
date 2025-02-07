@@ -1,2 +1,0 @@
-public = 'pk_prod_T1B0YB67XMdTx59JkKK0IHlQCvSoecoaatBRj3bcK-KXVWHrkkG3owaiZxTqt2QJ'
-secret_key = 'sk_prod_0z6Qa-CwvFxK-BlB4kLeO1E4YAGb9bo5mXn7CLv6hbN-KomlCYsSnaRe8dQ62IdB'
