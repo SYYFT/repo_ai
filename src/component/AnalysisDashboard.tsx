@@ -138,7 +138,7 @@ export default function AnalysisDashboard({ files, onBack }: AnalysisDashboardPr
           File Type Distribution
         </h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {Object.entries(fileTypes).map(([type, count], index) => (
+          {Object.entries(fileTypes).map(([type, count], _) => (
             <div key={type} className="bg-gray-900/50 p-4 rounded-lg border border-gray-800">
               <div className="flex justify-between items-center mb-2">
                 <span className="text-green-400 font-medium">{type}</span>
