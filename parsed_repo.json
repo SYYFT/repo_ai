@@ -1,30 +1,17 @@
 {
     "files": [
-        "SAMPLE_REPO/master_utils.py",
-        "SAMPLE_REPO/__init__.py",
-        "SAMPLE_REPO/extract.py",
         "SAMPLE_REPO/transform.py",
+        "SAMPLE_REPO/__init__.py",
         "SAMPLE_REPO/load.py",
-        "SAMPLE_REPO/main.py"
+        "SAMPLE_REPO/main.py",
+        "SAMPLE_REPO/extract.py",
+        "SAMPLE_REPO/master_utils.py"
     ],
     "functions": {
-        "SAMPLE_REPO/master_utils.py": [],
-        "SAMPLE_REPO/__init__.py": [],
-        "SAMPLE_REPO/extract.py": [
-            "fetch_data_from_udemy_api",
-            "print_course_activity_summary",
-            "fetch_learning_attempt_last_90_days",
-            "fetch_user_course_activity",
-            "fetch_user_activity",
-            "fetch_learning_activity_attempt_summary",
-            "fetch_user_assessment_activity",
-            "fetch_user_path_activity",
-            "fetch_user_lab_activity",
-            "fetch_udemy_tables"
-        ],
         "SAMPLE_REPO/transform.py": [
             "merge_udemy_user_activity"
         ],
+        "SAMPLE_REPO/__init__.py": [],
         "SAMPLE_REPO/load.py": [
             "insert_user_activity",
             "insert_user_assessment_activity",
@@ -37,45 +24,35 @@
             "load_udemy_tables",
             "transform_udemy_tables",
             "etl"
-        ]
+        ],
+        "SAMPLE_REPO/extract.py": [
+            "fetch_data_from_udemy_api",
+            "print_course_activity_summary",
+            "fetch_learning_attempt_last_90_days",
+            "fetch_user_course_activity",
+            "fetch_user_activity",
+            "fetch_learning_activity_attempt_summary",
+            "fetch_user_assessment_activity",
+            "fetch_user_path_activity",
+            "fetch_user_lab_activity",
+            "fetch_udemy_tables"
+        ],
+        "SAMPLE_REPO/master_utils.py": []
     },
     "classes": {
-        "SAMPLE_REPO/master_utils.py": [],
-        "SAMPLE_REPO/__init__.py": [],
-        "SAMPLE_REPO/extract.py": [],
         "SAMPLE_REPO/transform.py": [],
+        "SAMPLE_REPO/__init__.py": [],
         "SAMPLE_REPO/load.py": [],
-        "SAMPLE_REPO/main.py": []
+        "SAMPLE_REPO/main.py": [],
+        "SAMPLE_REPO/extract.py": [],
+        "SAMPLE_REPO/master_utils.py": []
     },
     "imports": {
-        "SAMPLE_REPO/master_utils.py": [],
-        "SAMPLE_REPO/__init__.py": [],
-        "SAMPLE_REPO/extract.py": [
-            "time",
-            "datetime",
-            "timedelta",
-            "timezone",
-            "requests",
-            "base64",
-            "pandas",
-            "json",
-            "sys",
-            "os",
-            "base_url_user_course_activity",
-            "base_url_learning_activity_attempt",
-            "base_url_user_assessment_activity",
-            "base_url_user_path_activity",
-            "base_url_user_lab_activity",
-            "headers",
-            "base_url_user_activity",
-            "insert_log_audit",
-            "get_audit_sid",
-            "getLogger"
-        ],
         "SAMPLE_REPO/transform.py": [
             "text",
             "insert_log_audit"
         ],
+        "SAMPLE_REPO/__init__.py": [],
         "SAMPLE_REPO/load.py": [
             "datetime",
             "os",
@@ -111,6 +88,29 @@
             "getCredsFromAWS",
             "getLogger",
             "getSnowflakeEngine"
-        ]
+        ],
+        "SAMPLE_REPO/extract.py": [
+            "time",
+            "datetime",
+            "timedelta",
+            "timezone",
+            "requests",
+            "base64",
+            "pandas",
+            "json",
+            "sys",
+            "os",
+            "base_url_user_course_activity",
+            "base_url_learning_activity_attempt",
+            "base_url_user_assessment_activity",
+            "base_url_user_path_activity",
+            "base_url_user_lab_activity",
+            "headers",
+            "base_url_user_activity",
+            "insert_log_audit",
+            "get_audit_sid",
+            "getLogger"
+        ],
+        "SAMPLE_REPO/master_utils.py": []
     }
 }

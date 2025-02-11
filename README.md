@@ -175,33 +175,19 @@ This project is licensed under the MIT License.
 
 ### Updated Folder Structure:
 ```
-repo_ai/
-├── db/
-│   └── repository_data.db
-├── src/
-│   ├── backend/
-│   │   ├── parse_repo.py
-│   │   ├── query_api.py
-│   │   └── utils/
-│   ├── frontend/
-│   │   ├── index.html
-│   │   ├── app.js
-│   │   └── styles.css
-│   ├── app/
-│   ├── components/
-│   ├── globals.css
-│   ├── liveblocks.config.ts
-│   └── utils.ts
-├── .env.example
-├── .gitignore
-├── .prettierrc
-├── index.html
-├── next.config.js
-├── package-lock.json
-├── package.json
-├── README.md
-├── server.js
-└── tsconfig.json
+repo_ai/               # Root directory of your project
+│── .github/workflows/  # GitHub Actions (if any)
+│── SAMPLE_REPO/        # Sample repo for testing
+│── parser/             # Contains parser.py
+│   ├── parser.py       # Python script to parse repositories
+│── src/                # React/TypeScript frontend
+│   ├── components/     # Contains file_explorer.tsx, analysis_dashboard.tsx
+│   ├── fonts/          # Contains fonts for boht file_explorer.tsx, analysis_dashboard.tsx
+│── server.py           # 🚀 FastAPI/Flask server for API connectivity
+│── parsed_repo.json    # JSON output file (if not using API)
+│── package.json        # Frontend package configuration
+│── README.md           # Project documentation
+
 ```
 
 ### Detailed Steps:

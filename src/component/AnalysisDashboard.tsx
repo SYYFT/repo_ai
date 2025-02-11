@@ -1,6 +1,6 @@
-// import React from 'react';
-import { BarChart3, FileText, FolderTree, Clock, ArrowLeft, ExternalLink, Download, UploadCloud } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import { BarChart3, FileText, FolderTree, Clock, ArrowLeft, ExternalLink, Download, UploadCloud, Loader } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface FileInfo {
   name: string;
@@ -16,11 +16,21 @@ interface AnalysisDashboardProps {
 
 export default function AnalysisDashboard({ files, onBack }: AnalysisDashboardProps) {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
+  // ✅ Function to trigger the loading screen and navigate to PreRepoAI.tsx
+  const handleBeginRepoAI = () => {
+    setLoading(true);
+    setTimeout(() => {
+      setLoading(false);
+      navigate("/pre-repo-ai");
+    }, 5000);
+  };
 
   const getFileTypeCount = () => {
     const types: Record<string, number> = {};
     files.forEach(file => {
-      const type = file.type === 'unknown' ? 'Other' : file.type.split('/')[1]?.toUpperCase() || 'Other';
+      const type = file.type === "unknown" ? "Other" : file.type.split("/")[1]?.toUpperCase() || "Other";
       types[type] = (types[type] || 0) + 1;
     });
     return types;
@@ -28,42 +38,30 @@ export default function AnalysisDashboard({ files, onBack }: AnalysisDashboardPr
 
   const fileTypes = getFileTypeCount();
 
-  // Upload function
-  const uploadFiles = async () => {
-    const formData = new FormData();
-    files.forEach((file) => {
-      if (file.file) {
-        formData.append("files", file.file);
-      }
-    });
-
-    try {
-      const response = await fetch("http://localhost:5000/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      const data = await response.json();
-      console.log("Uploaded Files:", data.uploaded_files);
-      alert("Files uploaded successfully!");
-    } catch (error) {
-      console.error("Upload Error:", error);
-      alert("File upload failed.");
-    }
-  };
-
   return (
     <div className="w-full animate-fadeIn">
+      {/* 🔥 Loading Screen */}
+      {loading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black z-50">
+          <div className="flex flex-col items-center">
+            {/* Neon Green Spinning Wheel */}
+            <Loader className="w-16 h-16 animate-spin text-green-400" />
+
+            {/* White "Initializing" Text, Smaller, and in Repo Font */}
+            <p className="text-white text-sm mt-2" style={{ fontFamily: "'Nova Square', sans-serif" }}>
+              Initializing
+            </p>
+          </div>
+        </div>
+      )}
+
+
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
-        <button
-          onClick={onBack}
-          className="flex items-center text-green-400 hover:text-green-300 transition-colors"
-        >
+        <button onClick={onBack} className="flex items-center text-green-400 hover:text-green-300 transition-colors">
           <ArrowLeft className="w-5 h-5 mr-2" />
           Back to Upload
         </button>
-        {/* Clickable repo.ai text for navigation back to WelcomePage */}
         <h1
           className="text-5xl font-bold bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent tracking-tight cursor-pointer"
           style={{ fontFamily: "'Nova Square', sans-serif" }}
@@ -83,9 +81,9 @@ export default function AnalysisDashboard({ files, onBack }: AnalysisDashboardPr
             </button>
           </div>
 
-          {/* Begin Repo.AI Button */}
+          {/* ✅ Modified "Begin Repo.AI" Button */}
           <button
-            onClick={uploadFiles}
+            onClick={handleBeginRepoAI}
             className="w-full px-4 py-3 bg-black text-green-400 border border-green-500 rounded-lg hover:bg-green-900/50 hover:border-green-400 transition-all flex items-center justify-center"
           >
             <UploadCloud className="w-5 h-5 mr-2" />
@@ -169,7 +167,7 @@ export default function AnalysisDashboard({ files, onBack }: AnalysisDashboardPr
               <div className="flex-1">
                 <p className="font-medium text-green-400">{file.name}</p>
                 <p className="text-sm text-green-500/70">
-                  {file.type === 'unknown' ? 'File' : file.type.split('/')[1]?.toUpperCase()} • {file.size}
+                  {file.type === "unknown" ? "File" : file.type.split("/")[1]?.toUpperCase()} • {file.size}
                 </p>
               </div>
               <button className="p-2 hover:bg-green-500/10 rounded-lg transition-colors">
