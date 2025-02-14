@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Folder, UploadCloud, Github, Laugh } from "lucide-react";
+import { Folder, UploadCloud, Github, Laugh, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface FileInfo {
@@ -15,7 +15,8 @@ interface FileExplorerProps {
 
 export default function FileExplorer({ setFiles }: FileExplorerProps) {
   const [isDragging, setIsDragging] = useState(false);
-  const [repoLink, setRepoLink] = useState(""); // 📌 Store GitHub/Bitbucket Link
+  const [repoLink, setRepoLink] = useState("");
+  const [isJokeOpen, setIsJokeOpen] = useState(false);
   const navigate = useNavigate();
 
   // 📌 Process files & navigate to analysis
@@ -56,11 +57,6 @@ export default function FileExplorer({ setFiles }: FileExplorerProps) {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   };
 
-  // 📌 Handle Joke
-  const handleJoke = () => {
-    alert("Why do programmers prefer dark mode? Because light attracts bugs!");
-  };
-
   // 📌 Handle Repo Link Submission
   const handleRepoSubmit = () => {
     if (repoLink.trim() !== "") {
@@ -71,9 +67,9 @@ export default function FileExplorer({ setFiles }: FileExplorerProps) {
 
   return (
     <div className="h-screen flex items-center justify-center">
-    <div className="absolute top-6 left-1/2 -translate-x-1/2 cursor-pointer" onClick={() => navigate("/")}>
-    <h1 className="text-7xl font-bold bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent tracking-tight" style={{ fontFamily: "'Nova Square', sans-serif" }}>repo.ai</h1>
-    </div>
+      <div className="absolute top-6 left-1/2 -translate-x-1/2 cursor-pointer" onClick={() => navigate("/")}>
+        <h1 className="text-7xl font-bold bg-gradient-to-r from-green-400 to-emerald-500 bg-clip-text text-transparent tracking-tight" style={{ fontFamily: "'Nova Square', sans-serif" }}>repo.ai</h1>
+      </div>
       <div className="grid grid-cols-2 grid-rows-2 gap-4 w-3/4 h-3/4">
         {/* 📌 Drop Folder or Files (Top Left) */}
         <div
@@ -132,12 +128,42 @@ export default function FileExplorer({ setFiles }: FileExplorerProps) {
 
         {/* 📌 Tell Me a Joke (Bottom Right) */}
         <div
+          onClick={() => setIsJokeOpen(true)}
           className="flex flex-col items-center justify-center border-2 border-green-400 rounded-lg p-6 transition-all duration-300 cursor-pointer bg-green-900/20 hover:bg-green-900/40"
-          onClick={handleJoke}
         >
           <Laugh className="w-16 h-16 text-green-400 mb-3" />
           <p className="text-lg font-medium text-green-400">Tell me a joke</p>
         </div>
+
+        {/* Custom Joke Dialog */}
+        {isJokeOpen && (
+          <div className="fixed inset-0 flex items-center justify-center z-50">
+            {/* Backdrop */}
+            <div 
+              className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+              onClick={() => setIsJokeOpen(false)}
+            />
+            
+            {/* Dialog Content */}
+            <div className="relative bg-gray-900 border-2 border-green-400 rounded-xl p-6 max-w-md w-full m-4 transform transition-all">
+              <button 
+                onClick={() => setIsJokeOpen(false)}
+                className="absolute top-4 right-4 text-green-400 hover:text-green-300"
+              >
+                <X className="w-5 h-5" />
+              </button>
+              
+              <div className="flex items-center gap-2 mb-4">
+                <Laugh className="w-6 h-6 text-green-400" />
+                <h2 className="text-xl font-semibold text-green-400">Here's your joke!</h2>
+              </div>
+              
+              <p className="text-lg text-green-400 text-center">
+                Why do programmers prefer dark mode? Because light attracts bugs!
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
