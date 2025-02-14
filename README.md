@@ -51,26 +51,17 @@ The backend uses DuckDB to store metadata about the repository:
 
 ---
 
-## Folder Structure
-```
-repo-insights-app/
-├── db/                     # Database folder (DuckDB database files)
-│   └── repository_data.db   # DuckDB database for repository insights
-├── src/
-│   ├── backend/             # Backend code and API
-│   │   ├── parse_repo.py    # Script to parse repository and populate DuckDB
-│   │   ├── query_api.py     # API for frontend data requests and LLM queries
-│   │   └── utils/           # Utility functions for data processing
-│   ├── frontend/            # Frontend code
-│   │   ├── index.html       # HTML entry point
-│   │   ├── app.js           # JavaScript for visualization and infinity scroll
-│   │   └── styles.css       # Styling for the frontend
-├── ARCHITECTURE.md          # This architecture document
-├── README.md                # Project overview and setup
-└── requirements.txt         # Python dependencies
-```
+
 
 ## Data Flow
+
+###  🚀 Updated Flow Based on Your Requirements
+- 1️⃣ User enters a GitHub URL in FileExplorer.tsx.
+- 2️⃣ FastAPI clones the repo (/fetch-repo) and returns the list of files.
+- 3️⃣ User is redirected to AnalysisDashboard.tsx, where they see only the file types.
+- 4️⃣ In the background, parser.py processes the repo and saves the result in parsed_repo.json via /fetch-repo.
+- 5️⃣ Later, a different page (e.g., ProcessedRepo.tsx) will fetch and display the parsed JSON from /get_parsed_data.
+
 
 ### Repository Parsing
 
