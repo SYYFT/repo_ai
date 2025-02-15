@@ -25,4 +25,9 @@ dist-ssr
 
 
 # CLONED REPOS
-.cloned_repos/
+cloned_repos/
+
+
+## test files 
+*test.js
+*test.py

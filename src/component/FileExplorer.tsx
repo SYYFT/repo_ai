@@ -9,6 +9,12 @@ interface FileInfo {
   file?: File;
 }
 
+interface RepoResponse {
+  repo_name: string;
+  files: string[];
+}
+
+
 interface FileExplorerProps {
   setFiles: (files: FileInfo[]) => void;
 }
@@ -24,6 +30,8 @@ export default function FileExplorer({ setFiles }: FileExplorerProps) {
 
   const navigate = useNavigate();
 
+
+  
   // 📌 Process files & show confirmation popup
   const processFiles = async (fileList: File[]) => {
     const newFiles: FileInfo[] = fileList.map(file => ({
@@ -64,51 +72,97 @@ export default function FileExplorer({ setFiles }: FileExplorerProps) {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   };
 
-  // 📌 Extract repo name from GitHub URL
-  const getRepoName = (url: string) => {
+  // 📌 Get Repository Name 
+  const getRepoName = (url: string): string => {
     return url.split("/").slice(-1)[0].replace(".git", "");
   };
-
-  // 📌 Handle Repo Link Submission
+  
+  // 📌 Handling Repository Submission Link 
+  // Gets the repository name from the URL and sends a POST request to the server to fetch the files.
+  // TODO: Fix the handleRepoSubmit function to make sure the error popup is shown only when the link is invalid.
   const handleRepoSubmit = async () => {
-    if (!repoLink.startsWith("https://github.com/")) {
-      setIsRepoError(true); // ✅ Show popup instead of alert
-      return;
-    }
-
-    setLoading(true);
-    const repoName = getRepoName(repoLink);
-
     try {
-      // Step 1: Send repo URL to FastAPI to clone
+      const trimmedUrl = repoLink.trim();
+      console.log('Starting validation for URL:', trimmedUrl);
+      
+      const githubURL = new URL(trimmedUrl);
+      console.log('URL parsed successfully:', {
+        hostname: githubURL.hostname,
+        pathname: githubURL.pathname
+      });
+      
+      if (!githubURL.hostname.toLowerCase().endsWith('github.com')) {
+        console.log('❌ Failed hostname check:', githubURL.hostname);
+        setIsRepoError(true);
+        return;
+      }
+      console.log('✅ Hostname check passed');
+      
+      const pathSegments = githubURL.pathname.split('/').filter(Boolean);
+      console.log('Path segments:', pathSegments);
+      
+      if (pathSegments.length < 2) {
+        console.log('❌ Failed segments length check:', pathSegments);
+        setIsRepoError(true);
+        return;
+      }
+      console.log('✅ Segments length check passed');
+      
+      const [owner, repo] = pathSegments;
+      const validNamePattern = /^[\w.-]+$/;
+      
+      if (!validNamePattern.test(owner) || !validNamePattern.test(repo)) {
+        console.log('❌ Failed name pattern check:', { owner, repo });
+        setIsRepoError(true);
+        return;
+      }
+      console.log('✅ Name pattern check passed');
+      
+      setIsRepoError(false);
+      setLoading(true);
+      const repoName = getRepoName(repoLink);
+      
       const response = await fetch("http://localhost:8000/fetch-repo", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ repo_url: repoLink }),
+        body: JSON.stringify({ repo_url: trimmedUrl }),
+        signal: AbortSignal.timeout(30000)
       });
-
+      
+      if (!response.ok) {
+        console.log('❌ Failed API response:', response.status);
+        throw new Error(`Failed to fetch repo. Status: ${response.status}`);
+      }
+      
       const data = await response.json();
-      if (!response.ok) throw new Error(data.detail || "Failed to fetch repo");
-
-      // Step 2: Convert API response to FileInfo[] format
-      const newFiles: FileInfo[] = data.files.map((file: string) => ({
+      console.log('API response:', data);
+      
+      if (!data.files || !Array.isArray(data.files)) {
+        console.log('❌ Invalid API response structure:', data);
+        throw new Error("Invalid API response structure.");
+      }
+      
+      const newFiles = data.files.map((file: string) => ({
         name: file,
-        type: file.split(".").pop() || "unknown",
+        type: file.includes(".") ? file.split(".").pop() ?? "unknown" : "folder",
         size: "Unknown",
       }));
-
-      // Step 3: Store the files in state
+      
       setFiles(newFiles);
-
-      // Step 4: Navigate to Analysis Dashboard
-      navigate("/analysis");
+      navigate("/analysis", { state: { repoName } });
     } catch (error) {
-      console.error("Error:", error);
-      alert("Failed to process repository.");
+      console.log('❌ Error caught:', error);
+      setIsRepoError(true);
     } finally {
       setLoading(false);
     }
   };
+    
+  
+  
+  
+  
+  
 
   return (
     <div className="h-screen flex items-center justify-center">
