@@ -1,48 +1,43 @@
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-import json
 import os
+import sys
+import json
 import shutil
 import subprocess
-import sys
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 
-from fastapi.middleware.cors import CORSMiddleware  # Import CORS middleware
-
-# Ensure the `parser/` directory is in the Python path
+# ✅ Ensure the `parser/` directory is in the Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "parser")))
 
-# Initialize FastAPI app
+# ✅ Import `parser.py` correctly
+try:
+    import parser
+except ImportError:
+    raise HTTPException(status_code=500, detail="Failed to import `parser.py`. Check file location.")
+
+# ✅ Initialize FastAPI
 app = FastAPI()
 
 # ============================
 # 📌 CORS Configuration
 # ============================
-# Get the current Codespace name
 CODESPACE_NAME = os.environ.get("CODESPACE_NAME")
 
 if CODESPACE_NAME:
-    FRONTEND_URL = f"https://{CODESPACE_NAME}-5175.app.github.dev"
+    FRONTEND_URL = f"https://{CODESPACE_NAME}-*.app.github.dev"  # Allow dynamic frontend ports
 else:
-    FRONTEND_URL = "http://localhost:5175"
+    FRONTEND_URL = "http://localhost:5173"  # Default for local development
 
-# Apply CORS with dynamic frontend URL
+print(f"✅ CORS allowed origin set to: {FRONTEND_URL}")  # Debugging
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[FRONTEND_URL],  # Dynamically allow only the correct frontend
+    allow_origins=[FRONTEND_URL],  # Dynamically set frontend URL
     allow_credentials=True,
-    allow_methods=["*"],  
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],  # ✅ Restrict methods for security
+    allow_headers=["*"],  # Allow all headers
 )
-
-print(f"✅ CORS allowed origin set to: {FRONTEND_URL}")
-
-
-
-
-import parser
-
-# Define base directory where cloned repositories are stored
-BASE_CLONE_DIR = "cloned_repos"
 
 # ============================
 # 📌 Models for API Requests
@@ -54,13 +49,15 @@ class RepoRequest(BaseModel):
 # ============================
 # 📌 Utility Functions
 # ============================
+BASE_CLONE_DIR = "cloned_repos"
+
 def clean_existing_repo(repo_path: str):
-    """Remove an existing repository directory before cloning."""
+    """Remove an existing repository before cloning."""
     if os.path.exists(repo_path):
         shutil.rmtree(repo_path)
 
 def check_git_installed():
-    """Check if Git is installed on the server."""
+    """Ensure Git is installed on the system."""
     try:
         subprocess.run(["git", "--version"], capture_output=True, check=True)
     except FileNotFoundError:
@@ -80,6 +77,9 @@ def clone_github_repo(repo_url: str, repo_path: str):
 
 def list_repository_files(repo_path: str):
     """Return a list of all files inside the cloned repository."""
+    if not os.path.exists(repo_path):
+        raise HTTPException(status_code=404, detail="Repository not found")
+    
     file_list = []
     for root, _, files in os.walk(repo_path):
         for file in files:
@@ -91,10 +91,8 @@ def parse_and_save_repo(repo_path: str):
     if not os.path.exists(repo_path):
         raise HTTPException(status_code=404, detail="Repository not found")
 
-    # Call the parser function (modify parser.py as needed)
     parsed_data = parser.parse_repository(repo_path)
 
-    # Save the parsed data into `parsed_repo.json`
     with open("parsed_repo.json", "w") as json_file:
         json.dump(parsed_data, json_file, indent=4)
 
@@ -117,19 +115,19 @@ async def fetch_repo(request: RepoRequest):
 
     print(f"🔍 Fetching repository: {repo_url}")
 
-    # Check if Git is installed
+    # ✅ Check if Git is installed
     check_git_installed()
 
-    # Remove existing repo if it exists
+    # ✅ Remove existing repo if it exists
     clean_existing_repo(repo_path)
 
-    # Clone the repository
+    # ✅ Clone the repository
     try:
         clone_github_repo(repo_url, repo_path)
     except HTTPException as e:
         return {"error": str(e.detail)}
 
-    # Retrieve file list
+    # ✅ Retrieve file list
     try:
         files = list_repository_files(repo_path)
     except Exception as e:
@@ -145,7 +143,7 @@ def parse_repository_api(repo_name: str):
     if not os.path.exists(repo_path):
         raise HTTPException(status_code=404, detail=f"Repository '{repo_name}' not found.")
 
-    # Parse and save data
+    # ✅ Parse and save data
     try:
         parsed_data = parse_and_save_repo(repo_path)
     except Exception as e:
@@ -162,7 +160,12 @@ def get_parsed_data():
     with open("parsed_repo.json", "r") as f:
         return json.load(f)
 
-
 @app.options("/fetch-repo")
 async def options_handler():
+    """Handle preflight OPTIONS request for CORS."""
     return {"message": "Preflight request accepted"}
+
+@app.get("/test")
+def test_api():
+    """Test API to confirm backend is reachable."""
+    return {"message": "Hello from FastAPI!"}
