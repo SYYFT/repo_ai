@@ -166,18 +166,47 @@ This project is licensed under the MIT License.
 
 ### Updated Folder Structure:
 ```
-repo_ai/               # Root directory of your project
-│── .github/workflows/  # GitHub Actions (if any)
-│── SAMPLE_REPO/        # Sample repo for testing
-│── parser/             # Contains parser.py
-│   ├── parser.py       # Python script to parse repositories
-│── src/                # React/TypeScript frontend
-│   ├── components/     # Contains file_explorer.tsx, analysis_dashboard.tsx
-│   ├── fonts/          # Contains fonts for boht file_explorer.tsx, analysis_dashboard.tsx
-│── server.py           # 🚀 FastAPI/Flask server for API connectivity
-│── parsed_repo.json    # JSON output file (if not using API)
-│── package.json        # Frontend package configuration
-│── README.md           # Project documentation
+repo_ai/                        # Root directory of your project
+│── docs/                        # API Documentation
+│   ├── api_endpoints.md         # API endpoint details
+│   ├── api_overview.md          # Overview of the API
+│   ├── index.md                 # Documentation index
+│
+│── src/                         # React/TypeScript Frontend
+│   ├── components/              # React Components
+│   │   ├── AnalysisDashboard.tsx # Dashboard component
+│   │   ├── FileExplorer.tsx      # File Explorer component
+│   │   ├── WelcomePage.tsx       # Landing Page component
+│   ├── fonts/                    # Fonts used in the frontend
+│   ├── App.tsx                   # Main App component
+│   ├── main.tsx                  # Application entry point
+│   ├── vite.env.d.ts             # TypeScript environment types
+│
+│── backend/                      # FastAPI Backend
+│   ├── server.py                 # API Server
+│   ├── main.py                   # Backend entry point
+│   ├── parser/                    # Parsing-related scripts
+│   │   ├── parser.py              # Parses repositories
+│   ├── db/                        # Database structure
+│   │   ├── dev/                   # Development database
+│   │   ├── test/                  # Test database
+│   │   ├── prod/                  # Production database
+│
+│── parsed_repo.json               # JSON output file (if not using API)
+│── package.json                   # Frontend package configuration
+│── README.md                      # Project documentation
+│── .env                            # Environment variables (set by start_codespace.sh)
+│── start_codespace.sh              # Script to set VITE_API_URL in `.env`
+│── .gitignore                      # Git ignore rules
+│── eslint.config.js                # ESLint configuration
+│── LICENSE                         # Project license
+│── mkdocs.yml                      # MkDocs configuration for documentation
+│── package-lock.json               # Lockfile for package dependencies
+│── tailwind.config.js              # Tailwind CSS configuration
+│── tsconfig.app.json               # TypeScript config for the app
+│── tsconfig.json                   # TypeScript base config
+│── tsconfig.node.json              # TypeScript config for Node.js
+│── vite.config.ts                   # Vite configuration
 
 ```
 

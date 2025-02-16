@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import "../fonts/fonts.css";
 
+
+
 const WelcomePage = () => {
   const navigate = useNavigate();
 

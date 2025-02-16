@@ -21,9 +21,9 @@ app = FastAPI()
 CODESPACE_NAME = os.environ.get("CODESPACE_NAME")
 
 if CODESPACE_NAME:
-    FRONTEND_URL = f"https://{CODESPACE_NAME}-5173.app.github.dev"
+    FRONTEND_URL = f"https://{CODESPACE_NAME}-5175.app.github.dev"
 else:
-    FRONTEND_URL = "http://localhost:5173"
+    FRONTEND_URL = "http://localhost:5175"
 
 # Apply CORS with dynamic frontend URL
 app.add_middleware(
