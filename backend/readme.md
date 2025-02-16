@@ -217,8 +217,11 @@ npm run dev
 
 ---
 
-## ✅ **You’re Ready to Go!** 🚀
-By following these steps, your **FastAPI backend** and **frontend** should be up and running smoothly!
+## 🔍 Correct Understanding of CORS
 
-Let me know if you run into any issues. 🎯
+Backend (FastAPI) → Runs on 8000
+URL: https://effective-guacamole-4pjwr7qv4j7fjqvv-8000.app.github.dev
+Frontend (React/Vite) → Runs on 5173
+URL: https://effective-guacamole-4pjwr7qv4j7fjqvv-5173.app.github.dev
+✅ The backend CORS settings must allow requests coming from the frontend (5173), so the backend must "whitelist" the frontend URL
 

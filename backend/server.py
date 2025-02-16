@@ -6,14 +6,40 @@ import shutil
 import subprocess
 import sys
 
+from fastapi.middleware.cors import CORSMiddleware  # Import CORS middleware
+
 # Ensure the `parser/` directory is in the Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "parser")))
 
-# Import parser module (for processing repo data)
-import parser
-
 # Initialize FastAPI app
 app = FastAPI()
+
+# ============================
+# 📌 CORS Configuration
+# ============================
+# Get the current Codespace name
+CODESPACE_NAME = os.environ.get("CODESPACE_NAME")
+
+if CODESPACE_NAME:
+    FRONTEND_URL = f"https://{CODESPACE_NAME}-5173.app.github.dev"
+else:
+    FRONTEND_URL = "http://localhost:5173"
+
+# Apply CORS with dynamic frontend URL
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[FRONTEND_URL],  # Dynamically allow only the correct frontend
+    allow_credentials=True,
+    allow_methods=["*"],  
+    allow_headers=["*"],
+)
+
+print(f"✅ CORS allowed origin set to: {FRONTEND_URL}")
+
+
+
+
+import parser
 
 # Define base directory where cloned repositories are stored
 BASE_CLONE_DIR = "cloned_repos"
@@ -135,3 +161,8 @@ def get_parsed_data():
 
     with open("parsed_repo.json", "r") as f:
         return json.load(f)
+
+
+@app.options("/fetch-repo")
+async def options_handler():
+    return {"message": "Preflight request accepted"}

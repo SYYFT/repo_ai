@@ -199,8 +199,9 @@ export default function FileExplorer({ setFiles }: FileExplorerProps) {
       setIsRepoError(false);
       setLoading(true);
       const repoName = getRepoName(repoLink);
-  
-      const API_URL = "https://effective-guacamole-4pjwr7qv4j7fjqvv-8000.app.github.dev"; 
+                      
+      const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+
   
       const response = await fetch(`${API_URL}/fetch-repo`, {
         method: "POST",
