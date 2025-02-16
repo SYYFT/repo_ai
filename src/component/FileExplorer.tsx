@@ -79,85 +79,164 @@ export default function FileExplorer({ setFiles }: FileExplorerProps) {
   
   // 📌 Handling Repository Submission Link 
   // Gets the repository name from the URL and sends a POST request to the server to fetch the files.
-  // TODO: Fix the handleRepoSubmit function to make sure the error popup is shown only when the link is invalid.
+  // // TODO: Fix the handleRepoSubmit function to make sure the error popup is shown only when the link is invalid.
+  // const handleRepoSubmit = async () => {
+  //   try {
+  //     const trimmedUrl = repoLink.trim();
+  //     console.log('Starting validation for URL:', trimmedUrl);
+      
+  //     const githubURL = new URL(trimmedUrl);
+  //     console.log('URL parsed successfully:', {
+  //       hostname: githubURL.hostname,
+  //       pathname: githubURL.pathname
+  //     });
+      
+  //     if (!githubURL.hostname.toLowerCase().endsWith('github.com')) {
+  //       console.log('❌ Failed hostname check:', githubURL.hostname);
+  //       setIsRepoError(true);
+  //       return;
+  //     }
+  //     console.log('✅ Hostname check passed');
+      
+  //     const pathSegments = githubURL.pathname.split('/').filter(Boolean);
+  //     console.log('Path segments:', pathSegments);
+      
+  //     if (pathSegments.length < 2) {
+  //       console.log('❌ Failed segments length check:', pathSegments);
+  //       setIsRepoError(true);
+  //       return;
+  //     }
+  //     console.log('✅ Segments length check passed');
+      
+  //     const [owner, repo] = pathSegments;
+  //     const validNamePattern = /^[\w.-]+$/;
+      
+  //     if (!validNamePattern.test(owner) || !validNamePattern.test(repo)) {
+  //       console.log('❌ Failed name pattern check:', { owner, repo });
+  //       setIsRepoError(true);
+  //       return;
+  //     }
+  //     console.log('✅ Name pattern check passed');
+      
+  //     setIsRepoError(false);
+  //     setLoading(true);
+  //     const repoName = getRepoName(repoLink);
+      
+  //     const response = await fetch("http://localhost:8000/fetch-repo", {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({ repo_url: trimmedUrl }),
+  //       signal: AbortSignal.timeout(30000)
+  //     });
+      
+  //     if (!response.ok) {
+  //       console.log('❌ Failed API response:', response.status);
+  //       throw new Error(`Failed to fetch repo. Status: ${response.status}`);
+  //     }
+      
+  //     const data = await response.json();
+  //     console.log('API response:', data);
+      
+  //     if (!data.files || !Array.isArray(data.files)) {
+  //       console.log('❌ Invalid API response structure:', data);
+  //       throw new Error("Invalid API response structure.");
+  //     }
+      
+  //     const newFiles = data.files.map((file: string) => ({
+  //       name: file,
+  //       type: file.includes(".") ? file.split(".").pop() ?? "unknown" : "folder",
+  //       size: "Unknown",
+  //     }));
+      
+  //     setFiles(newFiles);
+  //     navigate("/analysis", { state: { repoName } });
+  //   } catch (error) {
+  //     console.log('❌ Error caught:', error);
+  //     setIsRepoError(true);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+    
   const handleRepoSubmit = async () => {
     try {
       const trimmedUrl = repoLink.trim();
-      console.log('Starting validation for URL:', trimmedUrl);
-      
+      console.log("Starting validation for URL:", trimmedUrl);
+  
       const githubURL = new URL(trimmedUrl);
-      console.log('URL parsed successfully:', {
+      console.log("URL parsed successfully:", {
         hostname: githubURL.hostname,
-        pathname: githubURL.pathname
+        pathname: githubURL.pathname,
       });
-      
-      if (!githubURL.hostname.toLowerCase().endsWith('github.com')) {
-        console.log('❌ Failed hostname check:', githubURL.hostname);
+  
+      if (!githubURL.hostname.toLowerCase().endsWith("github.com")) {
+        console.log("❌ Failed hostname check:", githubURL.hostname);
         setIsRepoError(true);
         return;
       }
-      console.log('✅ Hostname check passed');
-      
-      const pathSegments = githubURL.pathname.split('/').filter(Boolean);
-      console.log('Path segments:', pathSegments);
-      
+      console.log("✅ Hostname check passed");
+  
+      const pathSegments = githubURL.pathname.split("/").filter(Boolean);
+      console.log("Path segments:", pathSegments);
+  
       if (pathSegments.length < 2) {
-        console.log('❌ Failed segments length check:', pathSegments);
+        console.log("❌ Failed segments length check:", pathSegments);
         setIsRepoError(true);
         return;
       }
-      console.log('✅ Segments length check passed');
-      
+      console.log("✅ Segments length check passed");
+  
       const [owner, repo] = pathSegments;
       const validNamePattern = /^[\w.-]+$/;
-      
+  
       if (!validNamePattern.test(owner) || !validNamePattern.test(repo)) {
-        console.log('❌ Failed name pattern check:', { owner, repo });
+        console.log("❌ Failed name pattern check:", { owner, repo });
         setIsRepoError(true);
         return;
       }
-      console.log('✅ Name pattern check passed');
-      
+      console.log("✅ Name pattern check passed");
+  
       setIsRepoError(false);
       setLoading(true);
       const repoName = getRepoName(repoLink);
-      
-      const response = await fetch("http://localhost:8000/fetch-repo", {
+  
+      const API_URL = "https://effective-guacamole-4pjwr7qv4j7fjqvv-8000.app.github.dev"; 
+  
+      const response = await fetch(`${API_URL}/fetch-repo`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ repo_url: trimmedUrl }),
-        signal: AbortSignal.timeout(30000)
+        signal: AbortSignal.timeout(30000),
       });
-      
+  
       if (!response.ok) {
-        console.log('❌ Failed API response:', response.status);
+        console.log("❌ Failed API response:", response.status);
         throw new Error(`Failed to fetch repo. Status: ${response.status}`);
       }
-      
+  
       const data = await response.json();
-      console.log('API response:', data);
-      
+      console.log("✅ API response received:", data);
+  
       if (!data.files || !Array.isArray(data.files)) {
-        console.log('❌ Invalid API response structure:', data);
+        console.log("❌ Invalid API response structure:", data);
         throw new Error("Invalid API response structure.");
       }
-      
+  
       const newFiles = data.files.map((file: string) => ({
         name: file,
         type: file.includes(".") ? file.split(".").pop() ?? "unknown" : "folder",
         size: "Unknown",
       }));
-      
+  
       setFiles(newFiles);
       navigate("/analysis", { state: { repoName } });
     } catch (error) {
-      console.log('❌ Error caught:', error);
+      console.log("❌ Error caught:", error);
       setIsRepoError(true);
     } finally {
       setLoading(false);
     }
   };
-    
   
   
   

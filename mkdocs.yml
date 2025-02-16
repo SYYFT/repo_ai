@@ -1,0 +1,18 @@
+site_name: "Repo API Documentation"
+theme:
+  name: "material"
+docs_dir: docs
+nav:
+  - Home: index.md
+  - API Reference:
+      - Overview: docs/api_overview.md
+      - Endpoints: docs/api_endpoints.md
+
+markdown_extensions:
+  - toc:
+      permalink: "#"
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+  - admonition
+  - codehilite
