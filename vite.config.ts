@@ -7,4 +7,9 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
+  server: {
+    watch: {
+      ignored: ['**/cloned_repos/**'], // ✅ Ignore cloned repos to prevent unnecessary reloads
+    },
+  },
 });

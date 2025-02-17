@@ -13,7 +13,7 @@ def parse_file(filepath):
         with open(filepath, 'r', encoding='utf-8') as file:
             tree = ast.parse(file.read(), filename=filepath)
     except Exception as e:
-        logging.error(f"Failed to parse {filepath}: {e}")
+        logging.error(f"❌ Failed to parse {filepath}: {e}")
         return [], [], []
 
     functions, classes, imports = [], [], []
@@ -31,10 +31,10 @@ def parse_file(filepath):
 
 # Function to parse a repository directory
 def parse_repository(repo_path):
-    """Walks through a repository directory, parses each Python file, and returns JSON data."""
+    """Walks through a repository directory, parses each Python file, and returns structured JSON data."""
     if not os.path.exists(repo_path):
-        logging.error(f"Repository path {repo_path} does not exist.")
-        return json.dumps({"error": "Repository path does not exist"}, indent=4)
+        logging.error(f"❌ Repository path {repo_path} does not exist.")
+        return {"error": "Repository path does not exist"}
 
     repo_data = {
         "files": [],
@@ -46,7 +46,7 @@ def parse_repository(repo_path):
     for root, _, files in os.walk(repo_path):
         for file_name in files:
             if file_name.endswith('.py'):
-                filepath = os.path.join(root, file_name)
+                filepath = os.path.normpath(os.path.join(root, file_name))  # Normalize paths
                 
                 # Parse the file
                 functions, classes, imports = parse_file(filepath)
@@ -57,21 +57,21 @@ def parse_repository(repo_path):
                 repo_data["classes"][filepath] = classes
                 repo_data["imports"][filepath] = imports
 
-    logging.info("Repository parsing complete.")
-    return json.dumps(repo_data, indent=4)
+    logging.info("✅ Repository parsing complete.")
+    return repo_data  # ⬅️ Now returns a structured dictionary instead of a string!
 
 # Function to save parsed data to a JSON file
-def save_parsed_data(json_data, output_file="parsed_repo.json"):
+def save_parsed_data(parsed_data, output_file="parsed_repo.json"):
     """Saves parsed JSON data to a file."""
     try:
-        with open(output_file, "w") as json_file:
-            json_file.write(json_data)
-        logging.info(f"Parsed data saved to {output_file}")
+        with open(output_file, "w", encoding="utf-8") as json_file:
+            json.dump(parsed_data, json_file, indent=4)  # ✅ Use json.dump() for proper formatting
+        logging.info(f"✅ Parsed data saved to {output_file}")
     except Exception as e:
-        logging.error(f"Failed to save parsed data: {e}")
+        logging.error(f"❌ Failed to save parsed data: {e}")
 
 # Example usage
 if __name__ == "__main__":
-    repo_path = "SAMPLE_REPO"
-    parsed_json = parse_repository(repo_path)
-    save_parsed_data(parsed_json)
+    repo_path = "SAMPLE_REPO"  # Change to actual repo path
+    parsed_data = parse_repository(repo_path)
+    save_parsed_data(parsed_data)

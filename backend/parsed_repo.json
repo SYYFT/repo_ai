@@ -1,0 +1,69 @@
+{
+    "files": [
+        "cloned_repos\\repo_ai\\backend\\main.py",
+        "cloned_repos\\repo_ai\\backend\\server.py",
+        "cloned_repos\\repo_ai\\backend\\db\\dev\\ddl\\S__01_Schema_Creation.py",
+        "cloned_repos\\repo_ai\\backend\\db\\dev\\ddl\\S__02_Mimicking_Database_Architecture.py",
+        "cloned_repos\\repo_ai\\backend\\parser\\parser.py"
+    ],
+    "functions": {
+        "cloned_repos\\repo_ai\\backend\\main.py": [],
+        "cloned_repos\\repo_ai\\backend\\server.py": [
+            "clean_existing_repo",
+            "check_git_installed",
+            "clone_github_repo",
+            "list_repository_files",
+            "parse_and_save_repo",
+            "root",
+            "parse_repository_api",
+            "get_parsed_data",
+            "test_api"
+        ],
+        "cloned_repos\\repo_ai\\backend\\db\\dev\\ddl\\S__01_Schema_Creation.py": [],
+        "cloned_repos\\repo_ai\\backend\\db\\dev\\ddl\\S__02_Mimicking_Database_Architecture.py": [],
+        "cloned_repos\\repo_ai\\backend\\parser\\parser.py": [
+            "parse_file",
+            "parse_repository",
+            "save_parsed_data"
+        ]
+    },
+    "classes": {
+        "cloned_repos\\repo_ai\\backend\\main.py": [],
+        "cloned_repos\\repo_ai\\backend\\server.py": [
+            "RepoRequest"
+        ],
+        "cloned_repos\\repo_ai\\backend\\db\\dev\\ddl\\S__01_Schema_Creation.py": [],
+        "cloned_repos\\repo_ai\\backend\\db\\dev\\ddl\\S__02_Mimicking_Database_Architecture.py": [],
+        "cloned_repos\\repo_ai\\backend\\parser\\parser.py": []
+    },
+    "imports": {
+        "cloned_repos\\repo_ai\\backend\\main.py": [
+            "app",
+            "uvicorn"
+        ],
+        "cloned_repos\\repo_ai\\backend\\server.py": [
+            "os",
+            "sys",
+            "json",
+            "shutil",
+            "subprocess",
+            "FastAPI",
+            "HTTPException",
+            "CORSMiddleware",
+            "BaseModel",
+            "parser"
+        ],
+        "cloned_repos\\repo_ai\\backend\\db\\dev\\ddl\\S__01_Schema_Creation.py": [
+            "duckdb"
+        ],
+        "cloned_repos\\repo_ai\\backend\\db\\dev\\ddl\\S__02_Mimicking_Database_Architecture.py": [
+            "os"
+        ],
+        "cloned_repos\\repo_ai\\backend\\parser\\parser.py": [
+            "os",
+            "ast",
+            "json",
+            "logging"
+        ]
+    }
+}

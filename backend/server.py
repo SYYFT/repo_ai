@@ -1,18 +1,23 @@
 import os
 import sys
 import json
+import stat
 import shutil
 import subprocess
+import logging
+from pydantic import BaseModel
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from fastapi.responses import JSONResponse
 
 # ✅ Ensure the `parser/` directory is in the Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "parser")))
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 # ✅ Import `parser.py` correctly
 try:
     import parser
+
 except ImportError:
     raise HTTPException(status_code=500, detail="Failed to import `parser.py`. Check file location.")
 
@@ -51,10 +56,23 @@ class RepoRequest(BaseModel):
 # ============================
 BASE_CLONE_DIR = "cloned_repos"
 
+
+def remove_readonly(func, path, exc_info):
+    """Helper function to remove read-only files on Windows."""
+    os.chmod(path, stat.S_IWRITE)
+    func(path)
+
 def clean_existing_repo(repo_path: str):
     """Remove an existing repository before cloning."""
     if os.path.exists(repo_path):
-        shutil.rmtree(repo_path)
+        try:
+            shutil.rmtree(repo_path, onerror=remove_readonly)
+            print(f"✅ Deleted existing repo: {repo_path}")
+        except PermissionError as e:
+            print(f"❌ Permission Error: {e}")
+            raise HTTPException(status_code=500, detail=f"Failed to delete repo: {e}")
+
+
 
 def check_git_installed():
     """Ensure Git is installed on the system."""
@@ -73,7 +91,7 @@ def clone_github_repo(repo_url: str, repo_path: str):
         print("✅ Git Clone Success:", result.stdout)
     except subprocess.CalledProcessError as e:
         print("❌ Git Clone Error:", e.stderr)
-        raise HTTPException(status_code=500, detail=f"Failed to clone repository: {e.stderr}")
+        raise HTTPException(status_code=500, detail=f"Git Clone Failed: {e.stderr}")
 
 def list_repository_files(repo_path: str):
     """Return a list of all files inside the cloned repository."""
@@ -151,14 +169,29 @@ def parse_repository_api(repo_name: str):
 
     return parsed_data
 
+
+
 @app.get("/get_parsed_data")
 def get_parsed_data():
-    """Return the latest parsed repository data from the JSON file."""
-    if not os.path.exists("parsed_repo.json"):
-        raise HTTPException(status_code=404, detail="No parsed data available. Run /parse/{repo_name} first.")
+    """Return the latest parsed repository data from the JSON file in a pretty format."""
+    json_file = "parsed_repo.json"
 
-    with open("parsed_repo.json", "r") as f:
-        return json.load(f)
+    if not os.path.exists(json_file):
+        raise HTTPException(status_code=404, detail="❌ No parsed data available. Run /parse/{repo_name} first.")
+
+    try:
+        with open(json_file, "r", encoding="utf-8") as f:
+            parsed_data = json.load(f)  # ✅ Properly loads JSON file
+        return JSONResponse(content=parsed_data, media_type="application/json", indent=4)
+    
+    except json.JSONDecodeError as e:
+        logging.error(f"❌ JSON Decode Error: {e}")
+        raise HTTPException(status_code=500, detail="❌ Corrupted JSON file. Try re-parsing the repository.")
+
+    except Exception as e:
+        logging.error(f"❌ Unexpected Error: {e}")
+        raise HTTPException(status_code=500, detail=f"❌ Internal Server Error: {e}")
+
 
 @app.options("/fetch-repo")
 async def options_handler():
@@ -169,3 +202,6 @@ async def options_handler():
 def test_api():
     """Test API to confirm backend is reachable."""
     return {"message": "Hello from FastAPI!"}
+
+
+
