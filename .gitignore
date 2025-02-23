@@ -31,3 +31,18 @@ cloned_repos/
 ## test files 
 *test.js
 *test.py
+
+
+#venv 
+.repo.ai/
+
+
+#parsed files 
+backend/raw/
+backend/processed/
+backend/__pycache__/
+backend/parser/__pycache__/
+
+
+# Ignore all __pycache__ folders
+**/__pycache__/

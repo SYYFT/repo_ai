@@ -8,6 +8,15 @@ lsof -ti :5173 | xargs kill -9 2>/dev/null
 
 echo "✅ Ports cleared."
 
+# Activate virtual environment (modify this if needed)
+echo "🔧 Activating virtual environment..."
+source .repo.ai/bin/activate || source .repo.ai/Scripts/activate
+
+# Run database schema setup
+echo "🛠️ Setting up DuckDB schemas..."
+python backend/db/config_testdb.py
+python backend/db/config_proddb.py
+
 # Start the FastAPI backend in the background
 echo "🚀 Starting FastAPI backend..."
 cd backend

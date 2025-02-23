@@ -72,6 +72,6 @@ def save_parsed_data(parsed_data, output_file="parsed_repo.json"):
 
 # Example usage
 if __name__ == "__main__":
-    repo_path = "SAMPLE_REPO"  # Change to actual repo path
+    repo_path = "./backend/cloned_repos"  # Change to actual repo path
     parsed_data = parse_repository(repo_path)
     save_parsed_data(parsed_data)
